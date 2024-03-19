@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import { useState, useEffect } from 'react'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Spinner from 'react-bootstrap/Spinner'
 import Alert from 'react-bootstrap/Alert'
@@ -19,7 +19,7 @@ import Alert from 'react-bootstrap/Alert'
 // di prenotazioni assenti e si occuperà di creare un ListGroup.Item per ognuno degli elementi dell'array
 // this.state.reservations
 
-class BookingList extends Component {
+const BookingList = function () {
   // questo componente avrà lo scopo di RECUPERARE le prenotazioni esistenti dalle API
   // e mostrarle sotto forma di LISTA nel JSX
   // in HTML + JS le chiamate di tipo GET vengono solitamente effettuate all'avvio
@@ -33,14 +33,11 @@ class BookingList extends Component {
   // - salveremo questi dati nello stato del componente
   // - utilizzare questi dati per creare le parti dinamiche dell'interfaccia
 
-  state = {
-    reservations: [], // al fine di non snaturare questa fonte di dati, il tipo di questa proprietà sarà SEMPRE
-    // un array; poichè però le prenotazioni all'avvio ancora non ci sono, il suo valore sarà di array -vuoto-
-    isLoading: true,
-    isError: false,
-  }
+  const [reservations, setReservations] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [isError, setIsError] = useState(false)
 
-  fetchBookings = () => {
+  const fetchBookings = () => {
     // questa funzione freccia si occuperà di recuperare con una fetch() le prenotazioni
     // e salvarle nello stato del componente (in this.state.reservations)
     fetch('https://striveschool-api.herokuapp.com/api/reservation')
@@ -58,81 +55,71 @@ class BookingList extends Component {
       .then((reservationsFromAPI) => {
         console.log('RESERVATIONS', reservationsFromAPI)
         // qua tra poco le salveremo anche nello state...
-        this.setState({
-          reservations: reservationsFromAPI,
-          isLoading: false,
-        })
+        setReservations(reservationsFromAPI)
+        setIsLoading(false)
         // OGNI VOLTA che viene eseguito un this.setState(), il metodo render() viene invocato di nuovo!
       })
       .catch((error) => {
         console.log('ERRORE', error)
-        this.setState({
-          isLoading: false,
-          isError: true,
-        })
+        setIsLoading(false)
+        setIsError(true)
       })
   }
 
   // dove si eseguono le operazioni di fetch "iniziali" in un componente React?
   // c'è un posto ben preciso: un metodo chiamato "componentDidMount"
 
-  componentDidMount() {
-    // componentDidMount è un METODO DI LIFECYCLE
-    // questo metodo viene eseguito in AUTOMATICO da React, quando? un istante dopo il PRIMO montaggio del componente
+  useEffect(() => {
     console.log('IO SONO COMPONENTDIDMOUNT')
-    // io qui dentro farò la mia fetch, recupererò le prenotazioni e riempirò lo stato
-    // componentDidMount è GARANTITO essere eseguito UNA VOLTA SOLA, dopo il PRIMO render.
-    this.fetchBookings()
-  }
+    fetchBookings()
+  }, [])
 
-  render() {
-    // NON POSSIAMO METTERE this.fetchBookings() qui!
-    // perchè quel metodo dopo la fetch effettua un setState()
-    // e ogni volta che viene lanciato setState() render() viene re-invocato :')
-    // -> INFINITE LOOP
-    console.log('IO SONO RENDER')
-    return (
-      <div className="text-center mt-3">
-        <h2 className="mb-2">Prenotazioni correnti</h2>
-        <ListGroup>
-          {/* questo pezzettino di contenuto (un ListGroup.Item) verrà mostrato SOLAMENTE
+  // NON POSSIAMO METTERE this.fetchBookings() qui!
+  // perchè quel metodo dopo la fetch effettua un setState()
+  // e ogni volta che viene lanciato setState() render() viene re-invocato :')
+  // -> INFINITE LOOP
+  console.log('IO SONO RENDER')
+  return (
+    <div className="text-center mt-3">
+      <h2 className="mb-2">Prenotazioni correnti</h2>
+      <ListGroup>
+        {/* questo pezzettino di contenuto (un ListGroup.Item) verrà mostrato SOLAMENTE
             se la lunghezza dell'array reservations è esattamente ZERO */}
-          {/* questo operatore && in gergo si chiama SHORT-CIRCUIT */}
+        {/* questo operatore && in gergo si chiama SHORT-CIRCUIT */}
 
-          {this.state.reservations.length === 0 &&
-            this.state.isLoading === false &&
-            this.state.isError === false && (
-              <ListGroup.Item>
-                Al momento non ci sono prenotazioni 🙁
-              </ListGroup.Item>
-            )}
-
-          {this.state.isLoading === true && (
-            <div>
-              <Spinner animation="border" variant="success" />
-            </div>
+        {reservations.length === 0 &&
+          isLoading === false &&
+          isError === false && (
+            <ListGroup.Item>
+              Al momento non ci sono prenotazioni 🙁
+            </ListGroup.Item>
           )}
 
-          {this.state.isError === true && (
-            <div>
-              <Alert variant="danger">Qualcosa è andato storto 🙁</Alert>
-            </div>
-          )}
+        {isLoading === true && (
+          <div>
+            <Spinner animation="border" variant="success" />
+          </div>
+        )}
 
-          {this.state.reservations.map((reservation) => {
-            return (
-              <ListGroup.Item key={reservation._id}>
-                {reservation.name} per {reservation.numberOfPeople} il{' '}
-                {/* quando vedete {' '} è semplicemente Prettier che mette un carattere di spazio separatore
+        {isError === true && (
+          <div>
+            <Alert variant="danger">Qualcosa è andato storto 🙁</Alert>
+          </div>
+        )}
+
+        {reservations.map((reservation) => {
+          return (
+            <ListGroup.Item key={reservation._id}>
+              {reservation.name} per {reservation.numberOfPeople} il{' '}
+              {/* quando vedete {' '} è semplicemente Prettier che mette un carattere di spazio separatore
                 per poter mandare a capo la riga successiva */}
-                {reservation.dateTime}
-              </ListGroup.Item>
-            )
-          })}
-        </ListGroup>
-      </div>
-    )
-  }
+              {reservation.dateTime}
+            </ListGroup.Item>
+          )
+        })}
+      </ListGroup>
+    </div>
+  )
 }
 
 export default BookingList
