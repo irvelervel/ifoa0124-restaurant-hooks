@@ -8,3 +8,8 @@ body,
 #app {
   background-color: black;
 } */
+
+/* serve a rimuovere la sottolineatura dai nostri <Link>, che nel browser poi vengono tradotti come <a> */
+a {
+  text-decoration: none !important;
+}

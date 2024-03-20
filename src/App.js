@@ -12,6 +12,7 @@ import Col from 'react-bootstrap/Col'
 import BookingList from './components/BookingList'
 // importiamo da react-router-dom i componenti che ci servono
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import NotFound from './components/NotFound'
 
 function App() {
   return (
@@ -73,10 +74,12 @@ function App() {
                 </Row>
               }
             />
-          </Routes>
 
-          {/* se avessimo un footer e lo mettessimo qui, lo vedremmo in ogni pagina */}
+            {/* un path di * catturerà TUTTE le rotte non gestite precedentemente */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
         </Container>
+        {/* se avessimo un footer e lo mettessimo qui, lo vedremmo in ogni pagina */}
       </div>
     </BrowserRouter>
   )
