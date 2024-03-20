@@ -30,7 +30,7 @@ const HomeCarousel = function () {
 
   return (
     <>
-      <h2 className="my-3 text-center">Ecco il nostro menù!</h2>
+      <h2 className="my-3 text-center">Benvenuto nell'IFOA Restaurant!</h2>
       <Carousel
         onSlide={(newSlideIndex) => {
           // console.log('SLIDE CAMBIATA!', newSlideIndex)
