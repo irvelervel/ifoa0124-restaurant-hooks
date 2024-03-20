@@ -14,11 +14,14 @@ const RestaurantNavbar = function (props) {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="ms-auto">
-            <Link to="/admin">
-              <div className="nav-link">Admin</div>
+            <Link to="/menu">
+              <div className="nav-link">Menu</div>
             </Link>
             <Link to="/booking">
               <div className="nav-link">Prenotazioni</div>
+            </Link>
+            <Link to="/admin">
+              <div className="nav-link">Admin</div>
             </Link>
           </Nav>
         </Navbar.Collapse>
