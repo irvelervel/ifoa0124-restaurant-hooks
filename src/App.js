@@ -78,7 +78,14 @@ function App() {
             />
 
             <Route
-              path="/details"
+              // questa è una rotta PARAMETRICA
+              // definiamo un parametro chiamato pastaId e lo inseriamo dopo lo slash con i due punti
+              // questa rotta ora funziona su TUTTI gli url fatti così, es.
+              // /details/0
+              // /details/1
+              // /details/100
+              // /details/stefano
+              path="/details/:pastaId"
               element={
                 <Row className="justify-content-center">
                   <Col xs={12} md={8} lg={6}>

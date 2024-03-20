@@ -2,6 +2,7 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Badge from 'react-bootstrap/Badge'
 import items from '../data/menu.json'
+import { Link } from 'react-router-dom'
 
 const Menu = function () {
   return (
@@ -10,7 +11,9 @@ const Menu = function () {
         return (
           <Col xs={8} key={pasta.id} className="my-4">
             <div>
-              <img src={pasta.image} alt="single pasta" className="w-100" />
+              <Link to={'/details/' + pasta.id}>
+                <img src={pasta.image} alt="single pasta" className="w-100" />
+              </Link>
             </div>
             <h4 className="text-center mt-1">
               <span className="me-2">{pasta.name}</span>

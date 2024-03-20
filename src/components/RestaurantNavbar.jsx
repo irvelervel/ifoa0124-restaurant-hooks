@@ -2,9 +2,12 @@
 import Navbar from 'react-bootstrap/Navbar'
 import Container from 'react-bootstrap/Container'
 import Nav from 'react-bootstrap/Nav'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 const RestaurantNavbar = function (props) {
+  const location = useLocation()
+  console.log('LOCATION', location)
+
   return (
     <Navbar collapseOnSelect expand="lg" bg="dark" data-bs-theme="dark">
       <Container fluid>
@@ -15,13 +18,35 @@ const RestaurantNavbar = function (props) {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="ms-auto">
             <Link to="/menu">
-              <div className="nav-link">Menu</div>
+              <div
+                className={
+                  location.pathname === '/menu' ? 'nav-link active' : 'nav-link'
+                }
+              >
+                Menu
+              </div>
             </Link>
             <Link to="/booking">
-              <div className="nav-link">Prenotazioni</div>
+              <div
+                className={
+                  location.pathname === '/booking'
+                    ? 'nav-link active'
+                    : 'nav-link'
+                }
+              >
+                Prenotazioni
+              </div>
             </Link>
             <Link to="/admin">
-              <div className="nav-link">Admin</div>
+              <div
+                className={
+                  location.pathname === '/admin'
+                    ? 'nav-link active'
+                    : 'nav-link'
+                }
+              >
+                Admin
+              </div>
             </Link>
           </Nav>
         </Navbar.Collapse>
